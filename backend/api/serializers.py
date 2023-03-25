@@ -135,9 +135,9 @@ class RecipeWriteSerializer(BaseRecipeSerializer):
 
     def __fill_fields(self, instance, tags, ingredients):
         instance.tags.add(*[elem.id for elem in tags])
-        IngredientThrough = instance.ingredients.through
+        igredient_through = instance.ingredients.through
         ingredients_list = [
-            IngredientThrough(
+            igredient_through(
                 recipe_id=instance.id,
                 ingredient_id=ingredient["id"].id,
                 amount=ingredient["amount"],
@@ -145,7 +145,7 @@ class RecipeWriteSerializer(BaseRecipeSerializer):
             for ingredient in ingredients
         ]
 
-        IngredientThrough.objects.bulk_create(ingredients_list)
+        igredient_through.objects.bulk_create(ingredients_list)
 
         instance.save()
 
