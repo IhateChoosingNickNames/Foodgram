@@ -3,6 +3,8 @@
 
 Description: Application for recipe/ingredient management
 
+Link for website: http://foodgram.myftp.org
+
 Used technologies:
 -
     - python 3.10.4
