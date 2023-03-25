@@ -32,7 +32,6 @@ class Recipe(AbstractModel):
         related_name="recipes",
     )
 
-
     class Meta:
         ordering = ("-pub_date",)
         verbose_name = _("Рецепт")
