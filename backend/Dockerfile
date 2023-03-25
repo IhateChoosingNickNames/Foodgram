@@ -18,4 +18,6 @@ COPY . .
 
 LABEL author='Larkin Michael'
 
+RUN chmod +x entrypoint.sh
+
 ENTRYPOINT ["./docker-entrypoint.sh"]
