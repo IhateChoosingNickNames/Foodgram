@@ -13,7 +13,7 @@ class IsAdminOrReadOnly(permissions.BasePermission):
 class IsNotBlockedOrReadOnly(permissions.BasePermission):
     """Проверка наличия блокировки на аккаунте."""
 
-    def has_object_permission(self, request, view, obj):
+    def has_permission(self, request, view):
         return (
             request.method in permissions.SAFE_METHODS
             or not request.user.is_blocked

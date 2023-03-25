@@ -1,10 +1,10 @@
 import re
 
 from djoser.serializers import UserSerializer as US
+from recipes.models import Recipe
 from rest_framework import serializers
 
-from recipes.models import Recipe
-from users.models import User, Subscription
+from users.models import Subscription, User
 
 
 class RecipeSerializer(serializers.ModelSerializer):
@@ -21,9 +21,11 @@ class CustomUserSerializer(US):
     recipes_count = serializers.SerializerMethodField()
 
     def get_is_subscribed(self, obj):
-        return Subscription.objects.filter(
-            user=self.context["request"].user, author=obj
-        ).exists()
+        if self.context["request"].user.is_authenticated:
+            return Subscription.objects.filter(
+                user=self.context["request"].user, author=obj
+            ).exists()
+        return False
 
     def get_recipes(self, obj):
         recipe_count = 3

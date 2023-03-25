@@ -1,9 +1,8 @@
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
-from django.contrib.auth.models import PermissionsMixin, AbstractUser, \
-    _user_has_perm, _user_has_module_perms
 from django.utils.translation import gettext_lazy as _
 
 
@@ -110,7 +109,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         if self.is_active and self.is_admin:
             return True
         return super().has_perm(perm, obj)
-
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ("username", "first_name", "last_name")

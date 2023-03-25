@@ -1,9 +1,9 @@
 import csv
 
+from django.conf import settings
 from django.core.management import BaseCommand
 from django.db import IntegrityError
 from django.utils.translation import gettext_lazy as _
-from django.conf import settings
 
 from recipes.management.parsers import IngredientList
 from recipes.models import Ingredient

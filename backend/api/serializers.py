@@ -1,16 +1,10 @@
 import base64
 
 from django.core.files.base import ContentFile
-from rest_framework import serializers
 
-from recipes.models import (
-    Recipe,
-    Tag,
-    ShoppingCard,
-    Favorite,
-    Ingredient,
-    RecipeIngredient,
-)
+from recipes.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
+                            ShoppingCard, Tag)
+from rest_framework import serializers
 from users.serializers import CustomUserSerializer
 
 
@@ -93,14 +87,18 @@ class BaseRecipeSerializer(serializers.ModelSerializer):
     tags = TagsSerializer(many=True)
 
     def get_is_in_shopping_cart(self, obj):
-        return ShoppingCard.objects.filter(
-            user=self.context["request"].user, recipe=obj
-        ).exists()
+        if self.context["request"].user.is_authenticated:
+            return ShoppingCard.objects.filter(
+                user=self.context["request"].user, recipe=obj
+            ).exists()
+        return False
 
     def get_is_favorited(self, obj):
-        return Favorite.objects.filter(
-            user=self.context["request"].user, recipe=obj
-        ).exists()
+        if self.context["request"].user.is_authenticated:
+            return Favorite.objects.filter(
+                user=self.context["request"].user, recipe=obj
+            ).exists()
+        return False
 
 
 class RecipeReadSerializer(BaseRecipeSerializer):
@@ -181,14 +179,18 @@ class RecipeWriteSerializer(BaseRecipeSerializer):
         return instance
 
     def get_is_in_shopping_cart(self, obj):
-        return ShoppingCard.objects.filter(
-            user=self.context["request"].user, recipe=obj
-        ).exists()
+        if self.context["request"].user.is_authenticated:
+            return ShoppingCard.objects.filter(
+                user=self.context["request"].user, recipe=obj
+            ).exists()
+        return False
 
     def get_is_favorited(self, obj):
-        return Favorite.objects.filter(
-            user=self.context["request"].user, recipe=obj
-        ).exists()
+        if self.context["request"].user.is_authenticated:
+            return Favorite.objects.filter(
+                user=self.context["request"].user, recipe=obj
+            ).exists()
+        return False
 
     class Meta:
         model = Recipe

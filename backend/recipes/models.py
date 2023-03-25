@@ -1,12 +1,11 @@
 import re
 
+from core.models import AbstractModel
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.core.validators import RegexValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-
-from core.models import AbstractModel
 
 
 User = get_user_model()
@@ -46,7 +45,9 @@ class Recipe(AbstractModel):
         return " | ".join([tag.name for tag in self.tags.all()])
 
     def ingredient_list(self):
-        return " | ".join([ingredient.name for ingredient in self.ingredients.all()])
+        return " | ".join(
+            [ingredient.name for ingredient in self.ingredients.all()]
+        )
 
     @admin.display
     def favorited_times(self):

@@ -1,9 +1,6 @@
 import os
-from datetime import timedelta
-
-import pathlib
-
 from pathlib import Path
+
 from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,9 +20,9 @@ ALLOWED_HOSTS = (
     "127.0.0.1",
 )
 
-CORS_ORIGIN_ALLOW_ALL = False
-
-CORS_ORIGIN_WHITELIST = ("http://localhost:3000",)
+# CORS_ORIGIN_ALLOW_ALL = False
+#
+# CORS_ORIGIN_WHITELIST = ("http://localhost:3000",)
 
 
 INSTALLED_APPS = (
@@ -35,17 +32,15 @@ INSTALLED_APPS = (
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
     "api.apps.ApiConfig",
     "recipes.apps.RecipesConfig",
     "users.apps.UsersConfig",
     "core.apps.CoreConfig",
-
     "rest_framework.authtoken",
     "rest_framework",
     "djoser",
     "django_filters",
-    "corsheaders",
+    # "corsheaders",
 )
 
 MIDDLEWARE = (
@@ -56,7 +51,7 @@ MIDDLEWARE = (
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
+    # "corsheaders.middleware.CorsMiddleware",
 )
 
 
@@ -83,23 +78,23 @@ TEMPLATES = (
 WSGI_APPLICATION = "foodgram.wsgi.application"
 
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": BASE_DIR / "db.sqlite3",
-#     }
-# }
-
 DATABASES = {
-    'default': {
-        'ENGINE': os.getenv('DB_ENGINE', default="django.db.backends.postgresql"),
-        'NAME': os.getenv('DB_NAME', default="postgres"),
-        'USER': os.getenv('POSTGRES_USER', default="postgres"),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD', default="adm"),
-        'HOST': os.getenv('DB_HOST', default="db"),
-        'PORT': os.getenv('DB_PORT', default="5432")
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': os.getenv('DB_ENGINE', default="django.db.backends.postgresql"),
+#         'NAME': os.getenv('DB_NAME', default="postgres"),
+#         'USER': os.getenv('POSTGRES_USER', default="postgres"),
+#         'PASSWORD': os.getenv('POSTGRES_PASSWORD', default="adm"),
+#         'HOST': os.getenv('DB_HOST', default="db"),
+#         'PORT': os.getenv('DB_PORT', default="5432")
+#     }
+# }
 
 AUTH_PASSWORD_VALIDATORS = (
     {
@@ -148,18 +143,14 @@ REST_FRAMEWORK = {
         "user": "10000/day",
         "anon": "1000/day",
     },
-    # "DEFAULT_PERMISSION_CLASSES": (
-    #     "rest_framework.permissions.IsAuthenticatedOrReadOnly",
-    # ),
-    # "DEFAULT_AUTHENTICATION_CLASSES": (
-    #     "rest_framework_simplejwt.authentication.JWTAuthentication",
-    # ),
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.IsAuthenticated",
+    ),
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework.authentication.TokenAuthentication",
         "rest_framework.authentication.SessionAuthentication",
     ),
 }
-
 
 
 DJOSER = {
@@ -168,6 +159,6 @@ DJOSER = {
         "current_user": "users.serializers.CustomUserSerializer",
     },
     "PERMISSIONS": {
-        "user": ("rest_framework.permissions.AllowAny",)
-    }
+        "user": ("rest_framework.permissions.IsAuthenticatedOrReadOnly",)
+    },
 }

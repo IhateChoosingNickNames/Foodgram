@@ -1,25 +1,18 @@
-from collections import defaultdict
-
-
-from rest_framework.viewsets import ModelViewSet
-from rest_framework.generics import (
-    RetrieveAPIView,
-    DestroyAPIView,
-    CreateAPIView,
-)
-from api.filters import RecipeSearchFilter, IngredientSearchFilter
-from api.pagination import CustomPagination
-from api.serializers import (
-    TagsSerializer,
-    IngredientsSerializer,
-    ShoppingCardSerializer,
-    FavoriteSerializer,
-    RecipeReadSerializer,
-    RecipeWriteSerializer,
-)
-from api.utils import pdf_response_creator
-from recipes.models import Recipe, Tag, Ingredient, ShoppingCard, Favorite
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.generics import (CreateAPIView, DestroyAPIView,
+                                     RetrieveAPIView)
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.viewsets import ModelViewSet
+
+from api.filters import IngredientSearchFilter, RecipeSearchFilter
+from api.pagination import CustomPagination
+from api.permissions import (IsAdminOrReadOnly, IsAuthorOrReadOnly,
+                             IsNotBlockedOrReadOnly)
+from api.serializers import (FavoriteSerializer, IngredientsSerializer,
+                             RecipeReadSerializer, RecipeWriteSerializer,
+                             ShoppingCardSerializer, TagsSerializer)
+from api.utils import pdf_response_creator
+from recipes.models import Favorite, Ingredient, Recipe, ShoppingCard, Tag
 
 
 class RecipeViewset(ModelViewSet):
@@ -32,6 +25,11 @@ class RecipeViewset(ModelViewSet):
     pagination_class = CustomPagination
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeSearchFilter
+    permission_classes = (
+        IsAuthenticatedOrReadOnly,
+        IsAuthorOrReadOnly,
+        IsNotBlockedOrReadOnly,
+    )
 
     def get_serializer_class(self):
         if self.action in ("list", "retrieve"):
@@ -42,6 +40,7 @@ class RecipeViewset(ModelViewSet):
 class TagsViewset(ModelViewSet):
     """Вьюсет тегов."""
 
+    permission_classes = (IsAuthenticatedOrReadOnly, IsAdminOrReadOnly)
     queryset = Tag.objects.all()
     serializer_class = TagsSerializer
 
@@ -49,6 +48,7 @@ class TagsViewset(ModelViewSet):
 class IngredientsViewset(ModelViewSet):
     """Вьюсет ингредиентов."""
 
+    permission_classes = (IsAuthenticatedOrReadOnly, IsAdminOrReadOnly)
     queryset = Ingredient.objects.all()
     serializer_class = IngredientsSerializer
     filter_backends = (DjangoFilterBackend,)
@@ -58,6 +58,7 @@ class IngredientsViewset(ModelViewSet):
 class ShoppingCardView(RetrieveAPIView):
     """Получение корзины в виде файла."""
 
+    permission_classes = (IsNotBlockedOrReadOnly,)
     serializer_class = ShoppingCardSerializer
 
     def get_object(self):
@@ -86,6 +87,7 @@ class ShoppingCardView(RetrieveAPIView):
 class CreateDeleteShoppingCardView(DestroyAPIView, CreateAPIView):
     """Добавление и удаление рецептов в корзину."""
 
+    permission_classes = (IsNotBlockedOrReadOnly, IsNotBlockedOrReadOnly)
     serializer_class = ShoppingCardSerializer
 
     def get_object(self):
@@ -106,6 +108,7 @@ class CreateDeleteShoppingCardView(DestroyAPIView, CreateAPIView):
 class FavoriteView(CreateAPIView, DestroyAPIView):
     """Добавление и удаление рецептов в избранное."""
 
+    permission_classes = (IsNotBlockedOrReadOnly, IsNotBlockedOrReadOnly)
     serializer_class = FavoriteSerializer
 
     def get_object(self):

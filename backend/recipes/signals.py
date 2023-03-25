@@ -12,7 +12,7 @@ def post_delete_image(sender, instance, *args, **kwargs):
     try:
         instance.image.delete(save=False)
         media_folder_cleaner()
-    except:
+    except Exception:
         pass
 
 
@@ -24,7 +24,7 @@ def pre_save_image(sender, instance, *args, **kwargs):
         old_img = instance.__class__.objects.get(id=instance.id).image.path
         try:
             new_img = instance.image.path
-        except:
+        except Exception:
             new_img = None
         if new_img != old_img:
             import os
@@ -32,7 +32,7 @@ def pre_save_image(sender, instance, *args, **kwargs):
             if os.path.exists(old_img):
                 os.remove(old_img)
                 media_folder_cleaner()
-    except:
+    except Exception:
         pass
 
 

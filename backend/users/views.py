@@ -1,37 +1,30 @@
 from djoser.views import UserViewSet as UVS
-from rest_framework import mixins
 from rest_framework.exceptions import ValidationError
-from rest_framework.generics import (
-    CreateAPIView,
-    DestroyAPIView,
-    GenericAPIView,
-    ListAPIView,
-)
-from rest_framework.response import Response
-from rest_framework.views import APIView
+from rest_framework.generics import CreateAPIView, DestroyAPIView, ListAPIView
+from rest_framework.permissions import (IsAuthenticated,
+                                        IsAuthenticatedOrReadOnly)
 
-from api.pagination import CustomPagination
-from api.permissions import IsAdminOrReadOnly
-from rest_framework import pagination
 from .models import Subscription, User
-from .serializers import (
-    SubscribeSerializer,
-    SubscriptionListSerializer,
-    CustomUserSerializer,
-)
+from .serializers import CustomUserSerializer, SubscribeSerializer
+from api.pagination import CustomPagination
+from api.permissions import IsNotBlockedOrReadOnly
 
 
 class UserViewSet(UVS):
     """Вьюсет пользователей."""
 
-    # permission_classes = (IsAdminOrReadOnly,)
-    # pagination_class = CustomPagination
     http_method_names = ("get", "post")
+
+    def get_permissions(self):
+        if self.action == "me":
+            return (IsAuthenticated,)
+        return (IsAuthenticatedOrReadOnly,)
 
 
 class SubscribeView(CreateAPIView, DestroyAPIView):
     """Вью подписки/отписки."""
 
+    permission_classes = (IsNotBlockedOrReadOnly,)
     queryset = Subscription.objects.all()
     serializer_class = SubscribeSerializer
 
@@ -60,6 +53,7 @@ class SubscribeView(CreateAPIView, DestroyAPIView):
 class SubscribeListView(ListAPIView):
     """Получение всех текущих подписок."""
 
+    permission_classes = (IsNotBlockedOrReadOnly,)
     serializer_class = CustomUserSerializer
     pagination_class = CustomPagination
 
