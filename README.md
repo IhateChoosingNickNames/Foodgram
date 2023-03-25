@@ -1,5 +1,5 @@
 # Foodgram
-[![YaMDb workflow](https://github.com/IhateChoosingNickNames/foodgram-project-react/actions/workflows/yamdb_workflow.yml/badge.svg)](https://github.com/IhateChoosingNickNames/foodgram-project-react/actions/workflows/yamdb_workflow.yml)
+[![Foodgram workflow](https://github.com/IhateChoosingNickNames/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg)](https://github.com/IhateChoosingNickNames/foodgram-project-react/actions/workflows/foodgram_workflow.yml)
 
 Description: Application for recipe/ingredient management
 
