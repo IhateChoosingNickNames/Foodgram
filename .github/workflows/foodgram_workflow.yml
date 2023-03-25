@@ -58,6 +58,7 @@ jobs:
           context: "{{defaultContext}}:frontend"
           push: True
           tags: ${{ secrets.DOCKER_USERNAME }}/foodgram_frontend:latest
+
   deploy:
     runs-on: ubuntu-latest
 
