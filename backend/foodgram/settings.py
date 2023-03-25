@@ -11,17 +11,16 @@ SECRET_KEY = os.getenv(
     default="django-insecure-e877=zax0li(2+kbp(ocp2@=6agden5&)t60up-=9c8srd8ndf",
 )
 
-DEBUG = True
+DEBUG = False
 
-# ALLOWED_HOSTS = (
-#     "localhost",
-#     "backend",
-#     "web",
-#     "127.0.0.1",
-#     "foodgram.myftp.org"
-# )
+ALLOWED_HOSTS = (
+    "localhost",
+    "backend",
+    "web",
+    "127.0.0.1",
+    "foodgram.myftp.org"
+)
 
-ALLOWED_HOSTS = ['*']
 
 # CORS_ORIGIN_ALLOW_ALL = False
 #
