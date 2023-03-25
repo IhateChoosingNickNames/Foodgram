@@ -18,6 +18,7 @@ ALLOWED_HOSTS = (
     "backend",
     "web",
     "127.0.0.1",
+    "foodgram.myftp.org"
 )
 
 # CORS_ORIGIN_ALLOW_ALL = False
