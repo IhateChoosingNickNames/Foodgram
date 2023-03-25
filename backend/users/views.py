@@ -1,4 +1,4 @@
-from djoser.views import UserViewSet as UVS
+from djoser.views import UserViewSet as DefaultUserViewSet
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import CreateAPIView, DestroyAPIView, ListAPIView
 from rest_framework.permissions import (IsAuthenticated,
@@ -10,7 +10,7 @@ from api.pagination import CustomPagination
 from api.permissions import IsNotBlockedOrReadOnly
 
 
-class UserViewSet(UVS):
+class UserViewSet(DefaultUserViewSet):
     """Вьюсет пользователей."""
 
     http_method_names = ("get", "post")

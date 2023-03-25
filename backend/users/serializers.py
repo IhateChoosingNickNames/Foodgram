@@ -1,6 +1,6 @@
 import re
 
-from djoser.serializers import UserSerializer as US
+from djoser.serializers import UserSerializer as DefaultUserSerializer
 from recipes.models import Recipe
 from rest_framework import serializers
 
@@ -13,7 +13,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         fields = ("id", "name", "image", "cooking_time")
 
 
-class CustomUserSerializer(US):
+class CustomUserSerializer(DefaultUserSerializer):
     """Кастомный сериализатор пользователей."""
 
     is_subscribed = serializers.SerializerMethodField()
