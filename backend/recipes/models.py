@@ -31,7 +31,7 @@ class Recipe(AbstractModel):
         on_delete=models.CASCADE,
         related_name="recipes",
     )
-    cooking_time = models.IntegerField(_("Время приготовления"))
+
 
     class Meta:
         ordering = ("-pub_date",)
