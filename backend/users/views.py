@@ -6,8 +6,8 @@ from rest_framework.permissions import (IsAuthenticated,
 
 from .models import Subscription, User
 from .serializers import CustomUserSerializer, SubscribeSerializer
-from api.pagination import CustomPagination
 from api.permissions import IsNotBlockedOrReadOnly
+from api.pagination import CustomPagination
 
 
 class UserViewSet(DefaultUserViewSet):
