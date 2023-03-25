@@ -16,9 +16,9 @@ DEBUG = False
 ALLOWED_HOSTS = (
     "localhost",
     "backend",
-    "web",
     "127.0.0.1",
-    "foodgram.myftp.org"
+    "foodgram.myftp.org",
+    "158.160.11.231"
 )
 
 
