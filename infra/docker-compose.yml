@@ -1,4 +1,11 @@
 version: '3.8'
+
+volumes:
+  static_volume:
+  media_volume:
+  pg_volume:
+    external: true
+
 services:
 
   db:
@@ -43,8 +50,3 @@ services:
       - ../docs/:/usr/share/nginx/html/api/docs/
       - static_volume:/var/html/backend_static/
       - media_volume:/var/html/media/
-volumes:
-  static_volume:
-  media_volume:
-  pg_volume:
-    external: true
