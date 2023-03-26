@@ -5,6 +5,15 @@ Description: Application for recipe/ingredient management
 
 Link for website: http://foodgram.myftp.org
 
+### Available test users(for review):
+#### admin:
+    # login: adm@adm.adm
+    # password: adm
+#### common user:
+    # login: user@user.user
+    password: AOslOK1234!@
+
+
 Used technologies:
 -
     - python 3.10.4
@@ -28,7 +37,7 @@ Features:
     - Manage users and content with django admin-users
 
 
-Instructions:
+# Launch instructions:
 
 ## enviroment:
 Create .env file backend/.env and fill it with required keys:
@@ -41,27 +50,32 @@ Create .env file backend/.env and fill it with required keys:
 - DB_PORT=5432
 
 ## Docker:
-1. Build containers:
+1. This app's using external volume for DB so before you start you should create this volume:
+    #### docker volume create --name=pg_volume
+2. After that build and launch containers:
     #### docker-compose up -d --build
 For now app is available at localhost
 
 ### Some additional commands: 
-2. Fill DB's ingredient table with prepared data(should be placed in backend_static folder):
-    #### docker-compose exec web python manage.py populate_db
-3. Create admin-user:
-    #### winpty docker-compose exec web python manage.py createsuperuser
-4. To make dump of DB:
-    #### docker-compose exec web python manage.py dumpdata > your_fixture_name.json
-5. To load fixtures:
-    #### docker-compose exec web python manage.py loaddata your_fixture_name.json
+3. Fill DB's ingredient table with prepared data(should be placed in backend_static folder):
+    #### docker-compose exec backend python manage.py populate_db --json(or --csv)
+4. Create admin-user:
+    #### winpty docker-compose exec backend python manage.py createsuperuser
+5. To make dump of DB:
+    #### docker-compose exec backend python manage.py dumpdata > your_fixture_name.json
+6. To load fixtures:
+    #### docker-compose exec backend python manage.py loaddata your_fixture_name.json
 
 If you'll need any *manage.py* commands then you'll want to use prefix:
 
-    docker-compose exec web python manage.py *comand*
+    docker-compose exec backend python manage.py *comand*
+
+Admin-zone is available at:
+
+    # http://your_host/admin/
 
 All available endpoints and responses you can find in documentation:
 
-    # http://your_socket/api_docs/
-
+    # http://your_host/api/docs/
 
 Author: Larkin Michael
