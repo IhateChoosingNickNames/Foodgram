@@ -61,7 +61,7 @@ If you'll need any *manage.py* commands then you'll want to use prefix:
 
 All available endpoints and responses you can find in documentation:
 
-    # http://your_ip:your_port/redoc
+    # http://your_socket/api_docs/
 
 
 Author: Larkin Michael
