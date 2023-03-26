@@ -55,7 +55,7 @@ For now app is available at localhost
 5. To load fixtures:
     #### docker-compose exec web python manage.py loaddata your_fixture_name.json
 
-If you'll need any *manage.py* commands then you'll want to use prefix1:
+If you'll need any *manage.py* commands then you'll want to use prefix:
 
     docker-compose exec web python manage.py *comand*
 
