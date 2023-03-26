@@ -12,19 +12,20 @@ from api.pagination import CustomPagination
 class UserViewSet(DefaultUserViewSet):
     """Вьюсет пользователей."""
 
-    queryset = (
-        User.objects.all()
-        .annotate(recipes_count=Count("recipes"))
-        .annotate(
-            is_subscribed=Exists(
-                Subscription.objects.filter(author=OuterRef("pk"))
-            )
-        )
-    )
     http_method_names = ("get", "post")
 
     def get_queryset(self):
-        return self.queryset
+        return (
+            User.objects.all()
+            .annotate(recipes_count=Count("recipes"))
+            .annotate(
+                is_subscribed=Exists(
+                    Subscription.objects.filter(
+                        user=self.request.user, author=OuterRef("pk")
+                    )
+                )
+            )
+        )
 
 
 class SubscribeView(CreateAPIView, DestroyAPIView):
