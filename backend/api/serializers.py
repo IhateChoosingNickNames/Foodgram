@@ -4,8 +4,14 @@ from django.core.files.base import ContentFile
 from rest_framework import serializers
 from rest_framework.generics import get_object_or_404
 
-from recipes.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
-                            ShoppingCard, Tag)
+from recipes.models import (
+    Favorite,
+    Ingredient,
+    Recipe,
+    RecipeIngredient,
+    ShoppingCard,
+    Tag,
+)
 from users.serializers import CustomUserSerializer
 
 
@@ -88,12 +94,16 @@ class BaseRecipeSerializer(serializers.ModelSerializer):
     tags = TagsSerializer(many=True)
 
     def get_is_in_shopping_cart(self, obj):
-        if self.context["request"].user.is_authenticated:
+        if self.context["request"].user.is_authenticated and hasattr(
+            obj, "is_in_shopping_cart"
+        ):
             return obj.is_in_shopping_cart
         return False
 
     def get_is_favorited(self, obj):
-        if self.context["request"].user.is_authenticated:
+        if self.context["request"].user.is_authenticated and hasattr(
+            obj, "is_favorited"
+        ):
             return obj.is_favorited
         return False
 

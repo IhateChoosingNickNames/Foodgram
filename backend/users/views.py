@@ -1,9 +1,8 @@
-from django.db.models import Count
+from django.db.models import Count, Exists, OuterRef
 from djoser.views import UserViewSet as DefaultUserViewSet
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import CreateAPIView, DestroyAPIView, ListAPIView
-from rest_framework.permissions import (IsAuthenticated,
-                                        IsAuthenticatedOrReadOnly)
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from .models import Subscription, User
 from .serializers import CustomUserSerializer, SubscribeSerializer
@@ -13,21 +12,28 @@ from api.pagination import CustomPagination
 
 class UserViewSet(DefaultUserViewSet):
     """Вьюсет пользователей."""
-    queryset = User.objects.all().annotate(recipes_count=Count("recipes"))
-    http_method_names = ("get", "post")
 
-    def get_permissions(self):
-        if self.action == "me":
-            return (IsAuthenticated,)
-        return (IsAuthenticatedOrReadOnly,)
+    queryset = (
+        User.objects.all()
+        .annotate(
+            recipes_count=Count("recipes")
+        )
+        .annotate(
+            is_subscribed=Exists(
+                Subscription.objects.filter(author=OuterRef("pk"))
+            )
+        )
+    )
+    http_method_names = ("get", "post")
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
 
 class SubscribeView(CreateAPIView, DestroyAPIView):
     """Вью подписки/отписки."""
 
-    permission_classes = (IsNotBlockedOrReadOnly,)
     queryset = Subscription.objects.all()
     serializer_class = SubscribeSerializer
+    permission_classes = (IsNotBlockedOrReadOnly,)
 
     def get_object(self):
         return User.objects.get(
