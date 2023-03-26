@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.db.models import Count
 
-from .models import Ingredient, Recipe, Tag
+from .models import Ingredient, Recipe, RecipeIngredient, Tag
 
 
 @admin.register(Ingredient)
@@ -19,6 +19,10 @@ class TagAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
 
 
+class RecipeIngredientInline(admin.StackedInline):
+    model = RecipeIngredient
+
+
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
 
@@ -34,7 +38,8 @@ class RecipeAdmin(admin.ModelAdmin):
 
     search_fields = ("name", "author__username", "tags__name")
     list_editable = ("name",)
-    filter_horizontal = ("tags", "ingredients")
+    filter_horizontal = ("tags",)
+    inlines = (RecipeIngredientInline,)
 
     def favorited_times(self, obj):
         return obj.favorited_times
