@@ -21,28 +21,26 @@ class CustomUserSerializer(DefaultUserSerializer):
     recipes_count = serializers.SerializerMethodField()
 
     def get_is_subscribed(self, obj):
-        if self.context["request"].user.is_authenticated and hasattr(
-            obj, "is_subscribed"
-        ):
-            return obj.is_subscribed
+        if self.context["request"].user.is_authenticated:
+            return Subscription.objects.filter(
+                user=self.context["request"].user, author=obj
+            ).exists()
         return False
 
     def get_recipes(self, obj):
-        recipe_amount = 3
+        recipe_count = 3
         path = self.context["request"].get_full_path()
-        recipe_limit = re.search(r"recipes_limit=(\d+)", path)
+        recipe_limit = re.search(r"recipe_limit=(\d+)", path)
 
         if recipe_limit:
-            recipe_amount = int(recipe_limit.group(1))
+            recipe_count = int(recipe_limit.group(1))
 
         return UserRecipeSerializer(
-            Recipe.objects.filter(author=obj)[:recipe_amount], many=True
+            Recipe.objects.filter(author=obj)[:recipe_count], many=True
         ).data
 
     def get_recipes_count(self, obj):
-        if hasattr(obj, "recipes_count"):
-            return obj.recipes_count
-        return 0
+        return Recipe.objects.filter(author=obj).count()
 
     class Meta:
         model = User

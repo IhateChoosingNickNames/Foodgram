@@ -4,6 +4,7 @@ volumes:
   static_volume:
   media_volume:
   pg_volume:
+    external: true
 
 services:
 
