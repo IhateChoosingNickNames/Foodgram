@@ -21,10 +21,10 @@ class CustomUserSerializer(DefaultUserSerializer):
     recipes_count = serializers.SerializerMethodField()
 
     def get_is_subscribed(self, obj):
-        if self.context["request"].user.is_authenticated and hasattr(
-            obj, "is_subscribed"
-        ):
-            return obj.is_subscribed
+        if self.context["request"].user.is_authenticated:
+            return Subscription.objects.filter(
+                user=self.context["request"].user, author=obj
+            ).exists()
         return False
 
     def get_recipes(self, obj):
