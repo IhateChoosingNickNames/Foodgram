@@ -2,7 +2,6 @@ from django.db.models import Count, Exists, OuterRef
 from djoser.views import UserViewSet as DefaultUserViewSet
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import CreateAPIView, DestroyAPIView, ListAPIView
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from .models import Subscription, User
 from .serializers import CustomUserSerializer, SubscribeSerializer
@@ -15,9 +14,7 @@ class UserViewSet(DefaultUserViewSet):
 
     queryset = (
         User.objects.all()
-        .annotate(
-            recipes_count=Count("recipes")
-        )
+        .annotate(recipes_count=Count("recipes"))
         .annotate(
             is_subscribed=Exists(
                 Subscription.objects.filter(author=OuterRef("pk"))
@@ -25,7 +22,9 @@ class UserViewSet(DefaultUserViewSet):
         )
     )
     http_method_names = ("get", "post")
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+
+    def get_queryset(self):
+        return self.queryset
 
 
 class SubscribeView(CreateAPIView, DestroyAPIView):

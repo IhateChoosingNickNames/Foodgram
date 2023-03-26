@@ -16,9 +16,7 @@ DEBUG = True
 ALLOWED_HOSTS = (
     "localhost",
     "backend",
-    "127.0.0.1",
-    "foodgram.myftp.org",
-    "158.160.11.231",
+    "127.0.0.1"
     "0.0.0.0",
 )
 
@@ -155,6 +153,7 @@ DJOSER = {
         "current_user": "users.serializers.CustomUserSerializer",
     },
     "PERMISSIONS": {
-        "user": ("rest_framework.permissions.IsAuthenticatedOrReadOnly",)
+        "user": ("rest_framework.permissions.IsAuthenticatedOrReadOnly",),
+        "user_list": ("rest_framework.permissions.IsAuthenticatedOrReadOnly",)
     },
 }
