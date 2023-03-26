@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.db.models import Count
 
 from .models import Ingredient, Recipe, Tag
 
@@ -30,6 +31,25 @@ class RecipeAdmin(admin.ModelAdmin):
         "ingredient_list",
         "favorited_times",
     )
+
     search_fields = ("name", "author__username", "tags__name")
     list_editable = ("name",)
     filter_horizontal = ("tags", "ingredients")
+
+    def favorited_times(self, obj):
+        return obj.favorited_times
+
+    def tag_list(self, obj):
+        return " | ".join([tag.name for tag in obj.tags.all()])
+
+    def ingredient_list(self, obj):
+        return " | ".join(
+            [ingredient.name for ingredient in obj.ingredients.all()]
+        )
+
+    def get_queryset(self, request):
+        return (
+            Recipe.objects.select_related("author")
+            .prefetch_related("tags", "ingredients")
+            .annotate(favorited_times=Count("favorite_object"))
+        )

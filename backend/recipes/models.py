@@ -1,9 +1,8 @@
 import re
 
 from core.models import AbstractModel
-from django.contrib import admin
 from django.contrib.auth import get_user_model
-from django.core.validators import RegexValidator
+from django.core.validators import RegexValidator, MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -31,27 +30,23 @@ class Recipe(AbstractModel):
         on_delete=models.CASCADE,
         related_name="recipes",
     )
-    cooking_time = models.IntegerField(_("Время приготовления"))
+    cooking_time = models.PositiveIntegerField(
+        _("Время приготовления"), validators=[MinValueValidator(1)]
+    )
 
     class Meta:
         ordering = ("-pub_date",)
         verbose_name = _("Рецепт")
         verbose_name_plural = _("Рецепты")
+        constraints = (
+            models.UniqueConstraint(
+                fields=("name", "author"),
+                name="unique name + author",
+            ),
+        )
 
     def __str__(self):
         return self.name[:50]
-
-    def tag_list(self):
-        return " | ".join([tag.name for tag in self.tags.all()])
-
-    def ingredient_list(self):
-        return " | ".join(
-            [ingredient.name for ingredient in self.ingredients.all()]
-        )
-
-    @admin.display
-    def favorited_times(self):
-        return Favorite.objects.filter(recipe_id=self.id).count()
 
 
 class Ingredient(AbstractModel):
@@ -89,7 +84,17 @@ class RecipeIngredient(models.Model):
         on_delete=models.CASCADE,
         related_name="ingr_recipe",
     )
-    amount = models.PositiveIntegerField(_("Общее доступное количество"))
+    amount = models.PositiveIntegerField(
+        _("Общее доступное количество"), validators=[MinValueValidator(1)]
+    )
+
+    class Meta:
+        constraints = (
+            models.UniqueConstraint(
+                fields=("recipe", "ingredient"),
+                name="unique recipe + ingredient",
+            ),
+        )
 
 
 class Tag(AbstractModel):

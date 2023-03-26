@@ -1,16 +1,28 @@
+from django.db.models import Exists, OuterRef
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.generics import (CreateAPIView, DestroyAPIView,
-                                     RetrieveAPIView)
+from rest_framework.generics import (
+    CreateAPIView,
+    DestroyAPIView,
+    RetrieveAPIView,
+)
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.viewsets import ModelViewSet
 
 from api.filters import IngredientSearchFilter, RecipeSearchFilter
 from api.pagination import CustomPagination
-from api.permissions import (IsAdminOrReadOnly, IsAuthorOrReadOnly,
-                             IsNotBlockedOrReadOnly)
-from api.serializers import (FavoriteSerializer, IngredientsSerializer,
-                             RecipeReadSerializer, RecipeWriteSerializer,
-                             ShoppingCardSerializer, TagsSerializer)
+from api.permissions import (
+    IsAdminOrReadOnly,
+    IsAuthorOrReadOnly,
+    IsNotBlockedOrReadOnly,
+)
+from api.serializers import (
+    FavoriteSerializer,
+    IngredientsSerializer,
+    RecipeReadSerializer,
+    RecipeWriteSerializer,
+    ShoppingCardSerializer,
+    TagsSerializer,
+)
 from api.utils import pdf_response_creator
 from recipes.models import Favorite, Ingredient, Recipe, ShoppingCard, Tag
 
@@ -18,8 +30,18 @@ from recipes.models import Favorite, Ingredient, Recipe, ShoppingCard, Tag
 class RecipeViewset(ModelViewSet):
     """Вьюсет рецептов."""
 
-    queryset = Recipe.objects.select_related("author").prefetch_related(
-        "ingredients", "tags"
+    queryset = (
+        Recipe.objects
+        .select_related("author")
+        .prefetch_related("ingredients", "tags")
+        .annotate(
+            is_in_shopping_cart=Exists(
+                ShoppingCard.objects.filter(recipe=OuterRef("pk"))
+            ),
+            is_favorited=Exists(
+                Favorite.objects.filter(recipe=OuterRef("pk"))
+            ),
+        )
     )
 
     pagination_class = CustomPagination
