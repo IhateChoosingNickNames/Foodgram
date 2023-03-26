@@ -41,18 +41,18 @@ Create .env file backend/.env and fill it with required keys:
 - DB_PORT=5432
 
 ## Docker:
-Build containers:
+1. Build containers:
     #### docker-compose up -d --build
 For now app is available at localhost
 
 ### Some additional commands: 
-1. Fill DB's ingredient table with prepared data(should be placed in backend_static folder):
+2. Fill DB's ingredient table with prepared data(should be placed in backend_static folder):
     #### docker-compose exec web python manage.py populate_db
-2. Create admin-user:
+3. Create admin-user:
     #### winpty docker-compose exec web python manage.py createsuperuser
-3. To make dump of DB:
+4. To make dump of DB:
     #### docker-compose exec web python manage.py dumpdata > your_fixture_name.json
-4. To load fixtures:
+5. To load fixtures:
     #### docker-compose exec web python manage.py loaddata your_fixture_name.json
 
 If you'll need any *manage.py* commands then you'll want to use prefix:
