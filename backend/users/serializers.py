@@ -22,6 +22,8 @@ class CustomUserSerializer(DefaultUserSerializer):
 
     def get_is_subscribed(self, obj):
         if self.context["request"].user.is_authenticated:
+            if hasattr(obj, "is_subscribed"):
+                return obj.is_subscribed
             return Subscription.objects.filter(
                 user=self.context["request"].user, author=obj
             ).exists()

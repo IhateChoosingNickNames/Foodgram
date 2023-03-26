@@ -81,7 +81,7 @@ class ShoppingCardView(RetrieveAPIView):
 
         data = {}
 
-        for recipe in self.get_queryset():
+        for recipe in self.get_queryset().select_related("user", "recipe"):
             for rec_ingr in recipe.recipe.recipe_ingr.all():
                 curr_ingredient = rec_ingr.ingredient
                 if curr_ingredient.name not in data:
