@@ -1,3 +1,4 @@
+from django.db.models import Count
 from djoser.views import UserViewSet as DefaultUserViewSet
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import CreateAPIView, DestroyAPIView, ListAPIView
@@ -12,7 +13,7 @@ from api.pagination import CustomPagination
 
 class UserViewSet(DefaultUserViewSet):
     """Вьюсет пользователей."""
-
+    queryset = User.objects.all().annotate(recipes_count=Count("recipes"))
     http_method_names = ("get", "post")
 
     def get_permissions(self):

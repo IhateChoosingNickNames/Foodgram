@@ -1,38 +1,26 @@
 from django.db.models import Exists, OuterRef
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.generics import (
-    CreateAPIView,
-    DestroyAPIView,
-    RetrieveAPIView,
-)
+from recipes.models import Favorite, Ingredient, Recipe, ShoppingCard, Tag
+from rest_framework.generics import (CreateAPIView, DestroyAPIView,
+                                     RetrieveAPIView, get_object_or_404)
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.viewsets import ModelViewSet
 
 from api.filters import IngredientSearchFilter, RecipeSearchFilter
 from api.pagination import CustomPagination
-from api.permissions import (
-    IsAdminOrReadOnly,
-    IsAuthorOrReadOnly,
-    IsNotBlockedOrReadOnly,
-)
-from api.serializers import (
-    FavoriteSerializer,
-    IngredientsSerializer,
-    RecipeReadSerializer,
-    RecipeWriteSerializer,
-    ShoppingCardSerializer,
-    TagsSerializer,
-)
+from api.permissions import (IsAdminOrReadOnly, IsAuthorOrReadOnly,
+                             IsNotBlockedOrReadOnly)
+from api.serializers import (FavoriteSerializer, IngredientsSerializer,
+                             RecipeReadSerializer, RecipeWriteSerializer,
+                             ShoppingCardSerializer, TagsSerializer)
 from api.utils import pdf_response_creator
-from recipes.models import Favorite, Ingredient, Recipe, ShoppingCard, Tag
 
 
 class RecipeViewset(ModelViewSet):
     """Вьюсет рецептов."""
 
     queryset = (
-        Recipe.objects
-        .select_related("author")
+        Recipe.objects.select_related("author")
         .prefetch_related("ingredients", "tags")
         .annotate(
             is_in_shopping_cart=Exists(
@@ -113,7 +101,7 @@ class CreateDeleteShoppingCardView(DestroyAPIView, CreateAPIView):
     serializer_class = ShoppingCardSerializer
 
     def get_object(self):
-        return Recipe.objects.get(id=self.kwargs["recipe_id"])
+        return get_object_or_404(Recipe, id=self.kwargs["recipe_id"])
 
     def perform_create(self, serializer):
         serializer.save(
@@ -121,8 +109,8 @@ class CreateDeleteShoppingCardView(DestroyAPIView, CreateAPIView):
         )
 
     def perform_destroy(self, instance):
-        to_delete = ShoppingCard.objects.get(
-            user_id=self.request.user.id, recipe_id=instance.id
+        to_delete = get_object_or_404(
+            ShoppingCard, user_id=self.request.user.id, recipe_id=instance.id
         )
         to_delete.delete()
 
@@ -134,8 +122,8 @@ class FavoriteView(CreateAPIView, DestroyAPIView):
     serializer_class = FavoriteSerializer
 
     def get_object(self):
-        return Recipe.objects.get(
-            id=self.request.parser_context["kwargs"]["recipe_id"]
+        return get_object_or_404(
+            Recipe, id=self.request.parser_context["kwargs"]["recipe_id"]
         )
 
     def get_queryset(self):
@@ -147,6 +135,6 @@ class FavoriteView(CreateAPIView, DestroyAPIView):
         )
 
     def perform_destroy(self, instance):
-        Favorite.objects.get(
-            user=self.request.user, recipe=self.get_object()
+        get_object_or_404(
+            Favorite, user=self.request.user, recipe=self.get_object()
         ).delete()

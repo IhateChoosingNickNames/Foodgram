@@ -7,7 +7,7 @@ from rest_framework import serializers
 from users.models import Subscription, User
 
 
-class RecipeSerializer(serializers.ModelSerializer):
+class UserRecipeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
         fields = ("id", "name", "image", "cooking_time")
@@ -35,7 +35,7 @@ class CustomUserSerializer(DefaultUserSerializer):
         if recipe_limit:
             recipe_count = int(recipe_limit.group(1))
 
-        return RecipeSerializer(
+        return UserRecipeSerializer(
             Recipe.objects.filter(author=obj)[:recipe_count], many=True
         ).data
 

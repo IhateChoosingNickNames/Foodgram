@@ -2,6 +2,7 @@ import base64
 
 from django.core.files.base import ContentFile
 from rest_framework import serializers
+from rest_framework.generics import get_object_or_404
 
 from recipes.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
                             ShoppingCard, Tag)
@@ -30,7 +31,7 @@ class TagsSerializer(serializers.ModelSerializer):
         fields = ("id", "name", "color", "slug")
 
     def to_internal_value(self, data):
-        return Tag.objects.get(id=data)
+        return get_object_or_404(Tag, id=data)
 
 
 class IngredientsSerializer(serializers.ModelSerializer):
