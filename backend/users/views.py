@@ -69,4 +69,4 @@ class SubscribeListView(ListAPIView):
             id__in=Subscription.objects.filter(user=self.request.user).values(
                 "author"
             )
-        )
+        ).annotate(recipes_count=Count("recipes"))
