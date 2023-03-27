@@ -73,10 +73,10 @@ If you'll need any *manage.py* commands then you'll want to use prefix:
 
 Admin-zone is available at:
 
-    http://your_host/admin/
+    https://your_host/admin/
 
 All available endpoints and responses you can find in documentation:
 
-    http://your_host/api/docs/
+    https://your_host/api/docs/
 
 Author: Larkin Michael
