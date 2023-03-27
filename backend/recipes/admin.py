@@ -21,6 +21,8 @@ class TagAdmin(admin.ModelAdmin):
 
 class RecipeIngredientInline(admin.StackedInline):
     model = RecipeIngredient
+    extra = 2
+    min_num = 1
 
 
 @admin.register(Recipe)

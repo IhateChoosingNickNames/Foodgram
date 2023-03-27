@@ -29,6 +29,10 @@ class RecipeViewset(ModelViewSet):
     )
 
     def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Recipe.objects.select_related("author").prefetch_related(
+                "ingredients", "tags"
+            )
         return (
             Recipe.objects.select_related("author")
             .prefetch_related("ingredients", "tags")
