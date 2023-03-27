@@ -5,6 +5,7 @@ Description: Application for recipe/ingredient management
 
 Link for the website: https://foodgram.myftp.org
 
+
 ### Available test users(for review):
 #### admin:
     # login: adm@adm.adm
@@ -12,7 +13,6 @@ Link for the website: https://foodgram.myftp.org
 #### common user:
     # login: user@user.user
     password: AOslOK1234!@
-
 
 Used technologies:
 -
@@ -26,6 +26,7 @@ Used technologies:
     - Postgresql
     - dotenv 0.21.1
     - Docker 20.10.22
+
 
 Features:
 -
