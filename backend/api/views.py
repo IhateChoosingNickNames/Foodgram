@@ -19,19 +19,6 @@ from api.utils import pdf_response_creator
 class RecipeViewset(ModelViewSet):
     """Вьюсет рецептов."""
 
-    queryset = (
-        Recipe.objects.select_related("author")
-        .prefetch_related("ingredients", "tags")
-        .annotate(
-            is_in_shopping_cart=Exists(
-                ShoppingCard.objects.filter(recipe=OuterRef("pk"))
-            ),
-            is_favorited=Exists(
-                Favorite.objects.filter(recipe=OuterRef("pk"))
-            ),
-        )
-    )
-
     pagination_class = CustomPagination
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeSearchFilter
@@ -40,6 +27,24 @@ class RecipeViewset(ModelViewSet):
         IsAuthorOrReadOnly,
         IsNotBlockedOrReadOnly,
     )
+
+    def get_queryset(self):
+        return (
+            Recipe.objects.select_related("author")
+            .prefetch_related("ingredients", "tags")
+            .annotate(
+                is_in_shopping_cart=Exists(
+                    ShoppingCard.objects.filter(
+                        user=self.request.user, recipe=OuterRef("pk")
+                    )
+                ),
+                is_favorited=Exists(
+                    Favorite.objects.filter(
+                        user=self.request.user, recipe=OuterRef("pk")
+                    )
+                ),
+            )
+        )
 
     def get_serializer_class(self):
         if self.action in ("list", "retrieve"):
