@@ -42,6 +42,8 @@ class CustomUserSerializer(DefaultUserSerializer):
         ).data
 
     def get_recipes_count(self, obj):
+        if hasattr(obj, "recipes_count"):
+            return obj.recipes_count
         return Recipe.objects.filter(author=obj).count()
 
     class Meta:

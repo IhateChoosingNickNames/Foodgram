@@ -1,13 +1,13 @@
 import base64
 
 from django.core.files.base import ContentFile
-
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
 
-from users.serializers import CustomUserSerializer
 from recipes.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
                             ShoppingCard, Tag)
+from users.serializers import CustomUserSerializer
 
 
 class Base64ImageField(serializers.ImageField):
@@ -48,7 +48,9 @@ class RecipeIngredientWriteSerializer(serializers.ModelSerializer):
     Только для записи.
     """
 
-    id = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all())
+    id = serializers.PrimaryKeyRelatedField(
+        queryset=Ingredient.objects.all(), source="name"
+    )
     amount = serializers.IntegerField()
 
     class Meta:
@@ -135,13 +137,31 @@ class RecipeWriteSerializer(BaseRecipeSerializer):
 
     ingredients = RecipeIngredientWriteSerializer(many=True)
 
+    def validate_ingredients(self, attrs):
+        if len(attrs) == 0:
+            raise ValidationError("You need to add at least 1")
+
+        validated_attrs = set()
+
+        for elem in attrs:
+            if elem["name"] in validated_attrs:
+                raise ValidationError("All ingredients should be unique")
+            validated_attrs.add(elem["name"])
+
+        return attrs
+
+    def validate_tags(self, attrs):
+        if len(attrs) == 0:
+            raise ValidationError("You need to add at least 1")
+        return attrs
+
     def __fill_fields(self, instance, tags, ingredients):
         instance.tags.add(*[elem.id for elem in tags])
         igredient_through = instance.ingredients.through
         ingredients_list = [
             igredient_through(
                 recipe_id=instance.id,
-                ingredient_id=ingredient["id"].id,
+                ingredient_id=ingredient["name"].id,
                 amount=ingredient["amount"],
             )
             for ingredient in ingredients

@@ -4,7 +4,7 @@ from rest_framework.routers import DefaultRouter
 from . import views
 
 router_v1 = DefaultRouter()
-router_v1.register(r"recipes", views.RecipeViewset)
+router_v1.register(r"recipes", views.RecipeViewset, basename="recipes")
 router_v1.register(r"tags", views.TagsViewset)
 router_v1.register(r"ingredients", views.IngredientsViewset)
 
