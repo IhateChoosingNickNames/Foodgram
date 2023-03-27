@@ -1,23 +1,48 @@
 from django.db.models import Exists, OuterRef
 from django_filters.rest_framework import DjangoFilterBackend
 from recipes.models import Favorite, Ingredient, Recipe, ShoppingCard, Tag
-from rest_framework.generics import (CreateAPIView, DestroyAPIView,
-                                     RetrieveAPIView, get_object_or_404)
+from rest_framework.generics import (
+    CreateAPIView,
+    DestroyAPIView,
+    RetrieveAPIView,
+    get_object_or_404,
+)
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.viewsets import ModelViewSet
 
 from api.filters import IngredientSearchFilter, RecipeSearchFilter
 from api.pagination import CustomPagination
-from api.permissions import (IsAdminOrReadOnly, IsAuthorOrReadOnly,
-                             IsNotBlockedOrReadOnly)
-from api.serializers import (FavoriteSerializer, IngredientsSerializer,
-                             RecipeReadSerializer, RecipeWriteSerializer,
-                             ShoppingCardSerializer, TagsSerializer)
+from api.permissions import (
+    IsAdminOrReadOnly,
+    IsAuthorOrReadOnly,
+    IsNotBlockedOrReadOnly,
+)
+from api.serializers import (
+    FavoriteSerializer,
+    IngredientsSerializer,
+    RecipeReadSerializer,
+    RecipeWriteSerializer,
+    ShoppingCardSerializer,
+    TagsSerializer,
+)
 from api.utils import pdf_response_creator
 
 
 class RecipeViewset(ModelViewSet):
     """Вьюсет рецептов."""
+
+    queryset = (
+        Recipe.objects.select_related("author")
+        .prefetch_related("ingredients", "tags")
+        .annotate(
+            is_in_shopping_cart=Exists(
+                ShoppingCard.objects.filter(recipe=OuterRef("pk"))
+            ),
+            is_favorited=Exists(
+                Favorite.objects.filter(recipe=OuterRef("pk"))
+            ),
+        )
+    )
 
     pagination_class = CustomPagination
     filter_backends = (DjangoFilterBackend,)
@@ -28,23 +53,23 @@ class RecipeViewset(ModelViewSet):
         IsNotBlockedOrReadOnly,
     )
 
-    def get_queryset(self):
-        return (
-            Recipe.objects.select_related("author")
-            .prefetch_related("ingredients", "tags")
-            .annotate(
-                is_in_shopping_cart=Exists(
-                    ShoppingCard.objects.filter(
-                        user=self.request.user, recipe=OuterRef("pk")
-                    )
-                ),
-                is_favorited=Exists(
-                    Favorite.objects.filter(
-                        user=self.request.user, recipe=OuterRef("pk")
-                    )
-                ),
-            )
-        )
+    # def get_queryset(self):
+    #     return (
+    #         Recipe.objects.select_related("author")
+    #         .prefetch_related("ingredients", "tags")
+    #         .annotate(
+    #             is_in_shopping_cart=Exists(
+    #                 ShoppingCard.objects.filter(
+    #                     user=self.request.user, recipe=OuterRef("pk")
+    #                 )
+    #             ),
+    #             is_favorited=Exists(
+    #                 Favorite.objects.filter(
+    #                     user=self.request.user, recipe=OuterRef("pk")
+    #                 )
+    #             ),
+    #         )
+    #     )
 
     def get_serializer_class(self):
         if self.action in ("list", "retrieve"):
