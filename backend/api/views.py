@@ -1,30 +1,18 @@
 from django.db.models import Exists, OuterRef
 from django_filters.rest_framework import DjangoFilterBackend
 from recipes.models import Favorite, Ingredient, Recipe, ShoppingCard, Tag
-from rest_framework.generics import (
-    CreateAPIView,
-    DestroyAPIView,
-    RetrieveAPIView,
-    get_object_or_404,
-)
+from rest_framework.generics import (CreateAPIView, DestroyAPIView,
+                                     RetrieveAPIView, get_object_or_404)
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.viewsets import ModelViewSet
 
 from api.filters import IngredientSearchFilter, RecipeSearchFilter
 from api.pagination import CustomPagination
-from api.permissions import (
-    IsAdminOrReadOnly,
-    IsAuthorOrReadOnly,
-    IsNotBlockedOrReadOnly,
-)
-from api.serializers import (
-    FavoriteSerializer,
-    IngredientsSerializer,
-    RecipeReadSerializer,
-    RecipeWriteSerializer,
-    ShoppingCardSerializer,
-    TagsSerializer,
-)
+from api.permissions import (IsAdminOrReadOnly, IsAuthorOrReadOnly,
+                             IsNotBlockedOrReadOnly)
+from api.serializers import (FavoriteSerializer, IngredientsSerializer,
+                             RecipeReadSerializer, RecipeWriteSerializer,
+                             ShoppingCardSerializer, TagsSerializer)
 from api.utils import pdf_response_creator
 
 
