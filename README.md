@@ -3,7 +3,7 @@
 
 Description: Application for recipe/ingredient management
 
-Link for the website: http://foodgram.myftp.org
+Link for the website: https://foodgram.myftp.org
 
 ### Available test users(for review):
 #### admin:
