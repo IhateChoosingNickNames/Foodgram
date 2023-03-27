@@ -3,7 +3,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from recipes.models import Favorite, Ingredient, Recipe, ShoppingCard, Tag
 from rest_framework.generics import (CreateAPIView, DestroyAPIView,
                                      RetrieveAPIView, get_object_or_404)
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, SAFE_METHODS
 from rest_framework.viewsets import ModelViewSet
 
 from api.filters import IngredientSearchFilter, RecipeSearchFilter
@@ -51,7 +51,7 @@ class RecipeViewset(ModelViewSet):
         )
 
     def get_serializer_class(self):
-        if self.action in ("list", "retrieve"):
+        if self.action in SAFE_METHODS:
             return RecipeReadSerializer
         return RecipeWriteSerializer
 
