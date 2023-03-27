@@ -3,7 +3,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from recipes.models import Favorite, Ingredient, Recipe, ShoppingCard, Tag
 from rest_framework.generics import (CreateAPIView, DestroyAPIView,
                                      RetrieveAPIView, get_object_or_404)
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, SAFE_METHODS
+from rest_framework.permissions import SAFE_METHODS, IsAuthenticatedOrReadOnly
 from rest_framework.viewsets import ModelViewSet
 
 from api.filters import IngredientSearchFilter, RecipeSearchFilter
