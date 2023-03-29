@@ -141,6 +141,9 @@ class ShoppingCard(models.Model):
     )
 
     class Meta:
+        ordering = ("user",)
+        verbose_name = _("Корзина")
+        verbose_name_plural = _("Корзины")
         constraints = (
             models.UniqueConstraint(
                 fields=("user", "recipe"),
@@ -166,6 +169,9 @@ class Favorite(models.Model):
     )
 
     class Meta:
+        ordering = ("user",)
+        verbose_name = _("Избранное")
+        verbose_name_plural = _("Избранное")
         constraints = (
             models.UniqueConstraint(
                 fields=("user", "recipe"), name="unique favorite"
