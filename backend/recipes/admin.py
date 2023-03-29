@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.db.models import Count
 
-from .models import Ingredient, Recipe, RecipeIngredient, Tag
+from .models import (Favorite, Ingredient, Recipe, RecipeIngredient,
+                     ShoppingCard, Tag)
 
 
 @admin.register(Ingredient)
@@ -60,3 +61,32 @@ class RecipeAdmin(admin.ModelAdmin):
             .prefetch_related("tags", "ingredients")
             .annotate(favorited_times=Count("favorite_object"))
         )
+
+
+class BaseReadOnlyAdmin(admin.ModelAdmin):
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+@admin.register(ShoppingCard)
+class ShoppingCardAdmin(BaseReadOnlyAdmin):
+    list_display = (
+        "pk",
+        "user",
+        "recipe",
+    )
+
+
+@admin.register(Favorite)
+class ShoppingCardAdmin(BaseReadOnlyAdmin):
+    list_display = (
+        "pk",
+        "user",
+        "recipe",
+    )

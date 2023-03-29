@@ -1,6 +1,7 @@
 import io
 
 from django.http import FileResponse
+from django.utils.translation import gettext_lazy as _
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
@@ -27,7 +28,9 @@ def pdf_response_creator(data):
     pdf_object = canvas.Canvas(buffer, pagesize=A4)
     pdf_object.setFont("Helvetica", 15, leading=None)
 
-    draw_headers_and_footers(pdf_object, 250, 800, "Your shopping card:")
+    draw_headers_and_footers(
+        pdf_object, 250, 800, _("Ваша продуктовая корзина:")
+    )
 
     y_coord = 750
     page = 1
@@ -57,7 +60,7 @@ def pdf_response_creator(data):
             page += 1
 
     draw_headers_and_footers(
-        pdf_object, 250, 10, "Thanks for choosing us", header=False
+        pdf_object, 250, 10, _("Спасибо, что выбрали наш сервис"), header=False
     )
 
     pdf_object.save()
