@@ -23,18 +23,19 @@ def draw_headers_and_footers(object, x_size, y_size, text, header=True):
 def pdf_response_creator(data):
     """Создание ответа в виде ПДФ-файла."""
 
+    pdfmetrics.registerFont(TTFont("Verdana", "Verdana.ttf"))
+
     buffer = io.BytesIO()
     pdf_object = canvas.Canvas(buffer, pagesize=A4)
-    pdf_object.setFont("Helvetica", 15, leading=None)
+    pdf_object.setFont("Verdana", 15, leading=None)
 
     draw_headers_and_footers(
-        pdf_object, 250, 800, "Ваша продуктовая корзина:"
+        pdf_object, 200, 800, "Ваша продуктовая корзина:"
     )
 
     y_coord = 750
     page = 1
 
-    pdfmetrics.registerFont(TTFont("Verdana", "Verdana.ttf"))
     pdf_object.setFont("Verdana", 10, leading=None)
 
     for ingr_name, ingr_data in sorted(data.items()):
@@ -59,7 +60,7 @@ def pdf_response_creator(data):
             page += 1
 
     draw_headers_and_footers(
-        pdf_object, 250, 10, "Спасибо, что выбрали наш сервис", header=False
+        pdf_object, 200, 10, "Спасибо, что выбрали наш сервис", header=False
     )
 
     pdf_object.save()
