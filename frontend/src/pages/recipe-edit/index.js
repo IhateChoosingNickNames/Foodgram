@@ -140,7 +140,7 @@ const RecipeEdit = ({ onItemDelete }) => {
                 return alert(`Ингредиенты: ${ingredients[0]}`)
               }
               else if (ingredients) {
-                return alert(`Ингредиенты 1: ${ingredients.filter(item => Object.keys(item).length).map(item => {
+                return alert(`Ингредиенты : ${ingredients.filter(item => Object.keys(item).length).map(item => {
                   const error = item[Object.keys(item)[0]]
                   return error && error.join(' ,')
                 })[0]}`)
