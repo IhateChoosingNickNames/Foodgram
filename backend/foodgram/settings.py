@@ -11,7 +11,7 @@ SECRET_KEY = os.getenv(
     default="django-insecure-e877=zax0li(2+kbp(ocp2@=6agden5&)t60up-=9c8srd8ndf",
 )
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = (
     "localhost",
@@ -76,6 +76,14 @@ TEMPLATES = (
 
 WSGI_APPLICATION = "foodgram.wsgi.application"
 
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 
 DATABASES = {
     'default': {

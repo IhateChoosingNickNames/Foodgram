@@ -29,7 +29,7 @@ def pdf_response_creator(data):
     pdf_object.setFont("Helvetica", 15, leading=None)
 
     draw_headers_and_footers(
-        pdf_object, 250, 800, _("Ваша продуктовая корзина:")
+        pdf_object, 250, 800, "Ваша продуктовая корзина:"
     )
 
     y_coord = 750
@@ -60,7 +60,7 @@ def pdf_response_creator(data):
             page += 1
 
     draw_headers_and_footers(
-        pdf_object, 250, 10, _("Спасибо, что выбрали наш сервис"), header=False
+        pdf_object, 250, 10, "Спасибо, что выбрали наш сервис", header=False
     )
 
     pdf_object.save()
