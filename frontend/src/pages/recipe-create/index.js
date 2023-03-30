@@ -93,13 +93,13 @@ const RecipeCreate = ({ onEdit }) => {
             if (non_field_errors) {
               return alert(non_field_errors.join(', '))
             }
-            // if (ingredients) {
-            //   return alert(`Ингредиенты: ${ingredients.filter(item => Object.keys(item).length).map(item => {
-            //     const error = item[Object.keys(item)[0]]
-            //     return error && error.join(' ,')
-            //   })[0]}`)
-            // }
-            if (ingredients) {
+            if (ingredients && typeof Array.isArray(ingredients)) {
+              return alert(`Ингредиенты: ${ingredients.filter(item => Object.keys(item).length).map(item => {
+                const error = item[Object.keys(item)[0]]
+                return error && error.join(' ,')
+              })[0]}`)
+            }
+            else if (ingredients) {
               return alert(`Ингредиенты: ${ingredients[0]}`)
             }
             if (cooking_time) {

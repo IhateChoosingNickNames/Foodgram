@@ -54,6 +54,10 @@ class RecipeIngredientWriteSerializer(serializers.ModelSerializer):
     )
     amount = serializers.IntegerField()
 
+    def validate_amount(self, obj):
+        print(obj)
+        return obj
+
     class Meta:
         model = RecipeIngredient
         fields = ("id", "amount")
