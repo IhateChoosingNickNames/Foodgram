@@ -2,7 +2,6 @@ import base64
 
 from django.core.files.base import ContentFile
 from rest_framework import serializers
-from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
 
 from recipes.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
@@ -139,25 +138,27 @@ class RecipeWriteSerializer(BaseRecipeSerializer):
 
     def validate_ingredients(self, attrs):
         if len(attrs) == 0:
-            raise ValidationError("You need to add at least 1")
+            raise serializers.ValidationError("You need to add at least 1")
 
         validated_attrs = set()
 
         for elem in attrs:
             if elem["name"] in validated_attrs:
-                raise ValidationError("All ingredients should be unique")
+                raise serializers.ValidationError(
+                    "All ingredients should be unique"
+                )
             elif (
                 not isinstance(elem["amount"], (int, float))
                 or elem["amount"] <= 0
             ):
-                raise ValidationError("Amount should be above 0.")
+                raise serializers.ValidationError("Amount should be above 0.")
             validated_attrs.add(elem["name"])
 
         return attrs
 
     def validate_tags(self, attrs):
         if len(attrs) == 0:
-            raise ValidationError("You need to add at least 1")
+            raise serializers.ValidationError("You need to add at least 1")
         return attrs
 
     def __fill_fields(self, instance, tags, ingredients):
