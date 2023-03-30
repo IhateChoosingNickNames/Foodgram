@@ -146,6 +146,11 @@ class RecipeWriteSerializer(BaseRecipeSerializer):
         for elem in attrs:
             if elem["name"] in validated_attrs:
                 raise ValidationError("All ingredients should be unique")
+            elif (
+                not isinstance(elem["amount"], (int, float))
+                or elem["amount"] <= 0
+            ):
+                raise ValidationError("Amount should be above 0.")
             validated_attrs.add(elem["name"])
 
         return attrs
