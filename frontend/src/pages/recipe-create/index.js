@@ -93,7 +93,7 @@ const RecipeCreate = ({ onEdit }) => {
             if (non_field_errors) {
               return alert(non_field_errors.join(', '))
             }
-            if (ingredients && typeof Array.isArray(ingredients[0])) {
+            if (ingredients && typeof Array.isArray(ingredients)) {
               return alert(`Ингредиенты 1: ${ingredients.filter(item => Object.keys(item).length).map(item => {
                 const error = item[Object.keys(item)[0]]
                 return error && error.join(' ,')
