@@ -6,14 +6,6 @@ Description: Application for recipe/ingredient management
 Link for the website: https://foodgram.myftp.org
 
 
-### Available test users(for review):
-#### admin:
-    # login: adm@adm.adm
-    # password: adm
-#### common user:
-    # login: user@user.user
-    password: AOslOK1234!@
-
 Used technologies:
 -
     - python 3.10.4
