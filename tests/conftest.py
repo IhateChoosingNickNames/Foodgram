@@ -22,3 +22,7 @@
 #     api = Api("Secret key")
 #     yield api
 #     api.close()
+
+pytest_plugins = [
+    'tests.fixtures.fixture_data',
+]
