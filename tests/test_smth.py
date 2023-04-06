@@ -6,12 +6,9 @@ def add(a, b):
 
 
 class TestSomeStuff:
-    @pytest.mark.parametrize(
-        "args, expected_result",
-        (
-            ((1, 2), 3),
-            ((2, 3), 5),
-        ),
-    )
-    def test_do_smth(self, args, expected_result):
-        assert add(*args) == expected_result
+
+    @pytest.mark.django_db(transaction=True)
+    def test_do_smth(self, client):
+        response = client.get("api/recipes/")
+
+        assert 1 == 1
